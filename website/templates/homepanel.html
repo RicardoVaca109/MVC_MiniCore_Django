@@ -1,1 +1,113 @@
-<h1>Hello World</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Panel de Reportes</h1>
+
+<!-- Tabla de Empleados -->
+<h2>Empleados</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees %}
+        <tr>
+            <td>{{ employee.id }}</td>
+            <td>{{ employee.name_employee }}</td>
+            <td>{{ employee.last_name_employee }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Tabla de Departamentos -->
+<h2>Departamentos</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre del Departamento</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for department in departments %}
+        <tr>
+            <td>{{ department.id }}</td>
+            <td>{{ department.name_department }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Tabla de Gastos -->
+<h2>Gastos</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>Monto</th>
+            <th>Empleado</th>
+            <th>Departamento</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for spend in spent %}
+        <tr>
+            <td>{{ spend.id }}</td>
+            <td>{{ spend.date_spent }}</td>
+            <td>{{ spend.description_spent }}</td>
+            <td>{{ spend.amount_spent }}</td>
+            <td>{{ spend.employee.name_employee }} {{ spend.employee.last_name_employee }}</td>
+            <td>{{ spend.department.name_department }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<!-- Selección de Rango de Fechas -->
+<h2>Filtro por Fecha</h2>
+<form method="get">
+    <div class="row mb-3">
+        <div class="col">
+            <label for="start_date">Fecha Inicio</label>
+            <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}">
+        </div>
+        <div class="col">
+            <label for="end_date">Fecha Fin</label>
+            <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}">
+        </div>
+        <div class="col align-self-end">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </div>
+    </div>
+</form>
+
+<!-- Tabla de Gasto Total por Departamento -->
+<h2>Gasto por Departamento</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Departamento</th>
+            <th>Monto Total Gastado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for expense in department_expenses %}
+        <tr>
+            <td>{{ expense.department__name_department }}</td>
+            <td>${{ expense.total_spent|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No hay datos para el rango de fechas seleccionado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
